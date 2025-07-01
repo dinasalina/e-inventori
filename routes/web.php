@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Models\Item;
+use App\Http\Controllers\ExportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,3 +29,6 @@ Route::get('/dashboard', function () {
 
     return view('dashboard.index', compact('total', 'stok_rendah', 'stok_ok', 'labels', 'data', 'top5'));
 })->name('dashboard');
+
+Route::get('/export-excel', [ExportController::class, 'exportExcel'])->name('export.excel');
+Route::get('/export-pdf', [ExportController::class, 'exportPDF'])->name('export.pdf');

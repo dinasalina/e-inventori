@@ -23,6 +23,15 @@
     </form>
     </div>
 
+    <div class="mb-3">
+    <a href="{{ route('export.excel') }}" class="btn btn-success">
+        <i class="fas fa-file-excel"></i> Export Excel
+    </a>
+    <a href="{{ route('export.pdf') }}" class="btn btn-danger" target="_blank">
+        <i class="fas fa-file-pdf"></i> Export PDF
+    </a>
+    </div>
+
 
     <div class="card">
         <div class="card-header bg-primary text-white">
