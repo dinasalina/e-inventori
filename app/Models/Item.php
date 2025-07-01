@@ -21,4 +21,10 @@ class Item extends Model
     // {
     //     return $this->belongsTo(User::class);
     // }
+
+    public function pergerakan()
+    {
+    return $this->hasMany(Pergerakan::class);
+    }
+
 }

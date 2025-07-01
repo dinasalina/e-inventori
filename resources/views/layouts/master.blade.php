@@ -39,6 +39,22 @@
                             <p>Stok Barang</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('pergerakan.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-random"></i>
+                            <p>Pergerakan Stok</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('pergerakan.statistik') }}" class="nav-link">
+                            <i class="nav-icon fas fa-chart-bar"></i>
+                            <p>Statistik Stok</p>
+                        </a>
+                    </li>
+
+                    
                 </ul>
             </nav>
         </div>

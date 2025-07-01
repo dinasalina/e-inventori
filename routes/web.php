@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Models\Item;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\PergerakanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,3 +33,9 @@ Route::get('/dashboard', function () {
 
 Route::get('/export-excel', [ExportController::class, 'exportExcel'])->name('export.excel');
 Route::get('/export-pdf', [ExportController::class, 'exportPDF'])->name('export.pdf');
+
+
+Route::resource('pergerakan', PergerakanController::class);
+
+
+Route::get('/statistik/pergerakan', [App\Http\Controllers\PergerakanController::class, 'statistik'])->name('pergerakan.statistik');
