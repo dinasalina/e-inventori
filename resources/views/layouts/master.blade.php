@@ -14,6 +14,16 @@
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <span class="navbar-brand">Sistem Stok Inventori</span>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
     </nav>
 
     <!-- Sidebar -->
@@ -24,37 +34,38 @@
         <div class="sidebar">
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column">
-
                     <li class="nav-item">
                         <a href="{{ route('dashboard') }}" class="nav-link">
                             <i class="nav-icon fas fa-chart-pie"></i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-
-
                     <li class="nav-item">
                         <a href="{{ route('items.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-boxes"></i>
                             <p>Stok Barang</p>
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a href="{{ route('pergerakan.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-random"></i>
                             <p>Pergerakan Stok</p>
                         </a>
                     </li>
-
                     <li class="nav-item">
                         <a href="{{ route('pergerakan.statistik') }}" class="nav-link">
                             <i class="nav-icon fas fa-chart-bar"></i>
                             <p>Statistik Stok</p>
                         </a>
                     </li>
-
-                    
+                    @if(auth()->user()->role === 'admin')
+                        <li class="nav-item">
+                            <a href="#" class="nav-link disabled">
+                                <i class="nav-icon fas fa-users-cog"></i>
+                                <p>Pengurusan Pengguna</p>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </nav>
         </div>
@@ -71,6 +82,15 @@
     </footer>
 </div>
 
+<!-- JS AdminLTE dari CDN -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+@yield('scripts')
+<!-- Chart.js dari CDN -->
+</body>
+</html>
 <!-- JS AdminLTE dari CDN -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -2,40 +2,50 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
-use App\Models\Item;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PergerakanController;
+use App\Http\Controllers\ProfileController;
+use App\Models\Item;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/stok', function () {
-//     return view('items.index');
-// })->name('items.index');
+// Semua route dilindungi login
+Route::middleware(['auth'])->group(function () {
 
-Route::resource('items',ItemController::class);
+    // Dashboard dengan statistik
+    Route::get('/dashboard', function () {
+        $total = Item::count();
+        $stok_rendah = Item::whereColumn('kuantiti', '<=', 'paras_minimum')->count();
+        $stok_ok = $total - $stok_rendah;
 
-Route::get('/dashboard', function () {
-    $total = Item::count();
-    $stok_rendah = Item::whereColumn('kuantiti', '<=', 'paras_minimum')->count();
-    $stok_ok = $total - $stok_rendah;
+        $items = Item::select('nama_barang', 'kuantiti')->get();
+        $labels = $items->pluck('nama_barang');
+        $data = $items->pluck('kuantiti');
 
-    $items = Item::select('nama_barang', 'kuantiti')->get();
-    $labels = $items->pluck('nama_barang');
-    $data = $items->pluck('kuantiti');
+        // Top 5 stok rendah
+        $top5 = Item::orderBy('kuantiti', 'asc')->take(5)->get();
 
-    // 🔴 Dapatkan top 5 barang stok paling rendah
-    $top5 = Item::orderBy('kuantiti', 'asc')->take(5)->get();
+        return view('dashboard.index', compact('total', 'stok_rendah', 'stok_ok', 'labels', 'data', 'top5'));
+    })->name('dashboard');
 
-    return view('dashboard.index', compact('total', 'stok_rendah', 'stok_ok', 'labels', 'data', 'top5'));
-})->name('dashboard');
+    // Modul Stok Barang
+    Route::resource('items', ItemController::class);
 
-Route::get('/export-excel', [ExportController::class, 'exportExcel'])->name('export.excel');
-Route::get('/export-pdf', [ExportController::class, 'exportPDF'])->name('export.pdf');
+    // Modul Pergerakan Barang
+    Route::resource('pergerakan', PergerakanController::class);
+    Route::get('/statistik/pergerakan', [PergerakanController::class, 'statistik'])->name('pergerakan.statistik');
 
+    // Export Excel & PDF
+    Route::get('/export-excel', [ExportController::class, 'exportExcel'])->name('export.excel');
+    Route::get('/export-pdf', [ExportController::class, 'exportPDF'])->name('export.pdf');
 
-Route::resource('pergerakan', PergerakanController::class);
+    // Profile (default dari Breeze)
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-
-Route::get('/statistik/pergerakan', [App\Http\Controllers\PergerakanController::class, 'statistik'])->name('pergerakan.statistik');
+// Route login/register/reset (default Breeze)
+require __DIR__.'/auth.php';

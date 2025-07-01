@@ -8,17 +8,40 @@ use Illuminate\Http\Request;
 
 class PergerakanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pergerakan = Pergerakan::with('item')->latest()->get();
-        return view('pergerakan.index', compact('pergerakan'));
+    $query = \App\Models\Pergerakan::with('item')->latest();
+
+    if ($request->filled('jenis')) {
+        $query->where('jenis', $request->jenis);
+    }
+
+    if ($request->filled('barang')) {
+        $query->whereHas('item', function ($q) use ($request) {
+            $q->where('nama_barang', 'like', '%' . $request->barang . '%');
+        });
+    }
+
+    if ($request->filled('catatan')) {
+        $query->where('catatan', 'like', '%' . $request->catatan . '%');
+    }
+
+    if ($request->filled('tarikh')) {
+        $query->whereDate('created_at', $request->tarikh);
+    }
+
+    $pergerakan = $query->get();
+
+    return view('pergerakan.index', compact('pergerakan'));
     }
 
     public function create()
     {
-        $items = Item::all();
-        return view('pergerakan.create', compact('items'));
+    $items = Item::all();
+    return view('pergerakan.create', compact('items'));
     }
+
+
 
     public function store(Request $request)
     {
